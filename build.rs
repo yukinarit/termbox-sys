@@ -1,6 +1,6 @@
 use std::env;
 use std::path::Path;
-use std::process::{Stdio, Command};
+use std::process::{Command, Stdio};
 
 fn main() {
     let out_dir = env::var("OUT_DIR").unwrap();
@@ -13,6 +13,7 @@ fn main() {
     install(&dst);
     clean();
     println!("cargo:rustc-link-search={}", dst.join("lib").display());
+    println!("cargo:rustc-link-search={}", dst.join("lib64").display());
     println!("cargo:rustc-link-lib=static=termbox");
 }
 
@@ -85,9 +86,10 @@ fn waf() -> Command {
 
 fn run(cmd: &mut Command) {
     println!("running: {:?}", cmd);
-    assert!(cmd.stdout(Stdio::inherit())
-                .stderr(Stdio::inherit())
-                .status()
-                .unwrap()
-                .success());
+    assert!(cmd
+        .stdout(Stdio::inherit())
+        .stderr(Stdio::inherit())
+        .status()
+        .unwrap()
+        .success());
 }
